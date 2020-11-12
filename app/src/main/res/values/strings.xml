@@ -3,4 +3,5 @@
     <string name="main_BTN_play">Play</string>
     <string name="main_LBL_scoreTable">Score Table</string>
     <string name="description">image</string>
+    <string name="zero">0</string>
 </resources>
