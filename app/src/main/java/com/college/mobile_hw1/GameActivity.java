@@ -2,6 +2,8 @@ package com.college.mobile_hw1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +16,7 @@ import java.util.Random;
 
 
 public class GameActivity extends AppCompatActivity {
+    protected enum Player {LEFT, RIGHT, BOTH}
 
     private HashMap<Integer, Integer> cards;
     private ArrayList<Integer> keyList;
@@ -30,12 +33,17 @@ public class GameActivity extends AppCompatActivity {
         this.game_IMG_play.setOnClickListener((View v) -> {
             playRound();
             if (keyList.isEmpty()) {
-                ImageView winner;
+
                 int leftPlayerScore = Integer.parseInt(game_LBL_rightScore.getText().toString());
                 int rightPlayerScore = Integer.parseInt(game_LBL_leftScore.getText().toString());
+
                 if (leftPlayerScore > rightPlayerScore)
-                    //TODO Winning activity + update table score
-                    openWinningActivity();
+                    openWinningActivity(GameActivity.this, "", Player.LEFT);
+                else if (leftPlayerScore < rightPlayerScore)
+                    openWinningActivity(GameActivity.this, "", Player.RIGHT);
+                else
+                    openWinningActivity(GameActivity.this, "", Player.BOTH);
+
                 finish();
             }
         });
@@ -68,8 +76,12 @@ public class GameActivity extends AppCompatActivity {
         this.game_IMG_play = findViewById(R.id.game_IMG_play);
     }
 
-    private void openWinningActivity() {
+    private void openWinningActivity(Activity baseActivity, String winnerName, Player winner) {
+        Intent mainIntent = new Intent(baseActivity, GameActivity.class);
+        mainIntent.putExtra("name", winnerName);
+        mainIntent.putExtra("winner_Side", winner);
 
+        startActivity(mainIntent);
     }
 
     private void playRound() {
