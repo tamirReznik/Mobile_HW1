@@ -9,14 +9,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 
 public class GameActivity extends AppCompatActivity {
-    protected enum Player {LEFT, RIGHT, BOTH}
 
     private HashMap<Integer, Integer> cards;
     private ArrayList<Integer> keyList;
@@ -38,13 +36,11 @@ public class GameActivity extends AppCompatActivity {
                 int rightPlayerScore = Integer.parseInt(game_LBL_leftScore.getText().toString());
 
                 if (leftPlayerScore > rightPlayerScore)
-                    openWinningActivity(GameActivity.this, "", Player.LEFT);
+                    openWinningActivity(GameActivity.this, R.drawable.player_boy, false);
                 else if (leftPlayerScore < rightPlayerScore)
-                    openWinningActivity(GameActivity.this, "", Player.RIGHT);
+                    openWinningActivity(GameActivity.this, R.drawable.player_girl, false);
                 else
-                    openWinningActivity(GameActivity.this, "", Player.BOTH);
-
-                finish();
+                    openWinningActivity(GameActivity.this, R.drawable.draw, true);
             }
         });
 
@@ -76,12 +72,12 @@ public class GameActivity extends AppCompatActivity {
         this.game_IMG_play = findViewById(R.id.game_IMG_play);
     }
 
-    private void openWinningActivity(Activity baseActivity, String winnerName, Player winner) {
-        Intent mainIntent = new Intent(baseActivity, GameActivity.class);
-        mainIntent.putExtra("name", winnerName);
-        mainIntent.putExtra("winner_Side", winner);
-
+    private void openWinningActivity(Activity baseActivity, int winner, boolean isDraw) {
+        Intent mainIntent = new Intent(baseActivity, WinnerActivity.class);
+        mainIntent.putExtra("drawable_id", winner);
+        mainIntent.putExtra("isDraw", isDraw);
         startActivity(mainIntent);
+        finish();
     }
 
     private void playRound() {

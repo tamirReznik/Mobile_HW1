@@ -6,4 +6,9 @@
     <string name="zero">0</string>
     <string name="winner">Winner!</string>
     <string name="back_to_menu">Back To Menu</string>
+    <string name="congrats">Congrats!!!</string>
+    <string name="you_won">You Won!</string>
+    <string name="drawMsg">It\'s a draw</string>
+    <string name="congratsMsg">Congrats!!!</string>
+    <string name="winMsg">You Won</string>
 </resources>

@@ -6,12 +6,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
 
 
     @Override
@@ -29,18 +25,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void exit() {
-        ImageView main_IMG_exit = findViewById(R.id.main_IMG_exit);
-        main_IMG_exit.setOnClickListener((View v) -> {
-            finish();
-        });
+        findViewById(R.id.main_IMG_exit).setOnClickListener((View v) -> finish());
     }
 
     public void play() {
-
-        Button main_BTN_play = findViewById(R.id.main_BTN_play);
-        main_BTN_play.setOnClickListener((View v) -> {
-            openPlayActivity(MainActivity.this);
-        });
+        findViewById(R.id.main_BTN_play).setOnClickListener((View v) -> openPlayActivity(MainActivity.this));
     }
 
     public void openPlayActivity(Activity baseActivity) {

@@ -8,12 +8,13 @@
     tools:context=".WinnerActivity">
 
     <TextView
+        android:id="@+id/winner_LBL_topMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
         android:layout_centerHorizontal="true"
-        android:textSize="50sp"
-        android:text="@string/winner"/>
+        android:layout_marginTop="18dp"
+        android:text=""
+        android:textSize="50sp" />
 
     <ImageView
         android:id="@+id/winner_IMG_player"
@@ -21,13 +22,26 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="" />
+        android:src="@drawable/upside_down_card"
+        android:contentDescription="@string/description" />
 
-    <Button
+    <TextView
+        android:id="@+id/winner_LBL_bottomMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/winner_IMG_player"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="166dp"
+        android:text=""
+        android:textSize="38sp" />
+
+    <Button
+        android:id="@+id/winner_BTN_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/back_to_menu"/>
+        android:layout_centerHorizontal="true"
+        android:text="@string/back_to_menu" />
 
 </RelativeLayout>
