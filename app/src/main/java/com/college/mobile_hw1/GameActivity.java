@@ -6,9 +6,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +22,38 @@ import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
 
+//    @Override
+//    protected void onPause() {
+//        Log.i("info", "GameonPause");
+//        super.onPause();
+//    }
+//
+//
+//    @Override
+//    protected void onDestroy() {
+//        Log.i("info", "GameonDestroy");
+//        super.onDestroy();
+//    }
+//
+//    @Override
+//    protected void onStart() {
+//        Log.i("info", "GameonStart");
+//        super.onStart();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        Log.i("info", "GameonResume");
+//        super.onResume();
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        Log.i("info", "GameonStop");
+//        super.onStop();
+//    }
+
+    public static final String ERROR = "Error";
     private HashMap<Integer, Integer> cards;
     private ArrayList<Integer> keyList;
     private ImageView game_IMG_cardL, game_IMG_cardR, game_IMG_play;
@@ -25,13 +62,23 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        Log.i("info", "GameonCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         initGame();
 
         this.game_IMG_play.setOnClickListener((View v) -> {
-            playRound();
+            try {
+                playRound();
+            } catch (NullPointerException e) {
+                Log.e(ERROR, "onCreate: ", e);
+            }
+
             if (keyList.isEmpty()) {
+                this.game_IMG_play.setOnClickListener(null);
+                Toast gameOver = Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT);
+                gameOver.setGravity(Gravity.TOP,0,0);
+                gameOver.show();
 
                 int leftPlayerScore = Integer.parseInt(game_LBL_leftScore.getText().toString());
                 int rightPlayerScore = Integer.parseInt(game_LBL_rightScore.getText().toString());
@@ -74,27 +121,31 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void openWinningActivity(Activity baseActivity, int winner, boolean isDraw) {
-        Intent mainIntent = new Intent(baseActivity, WinnerActivity.class);
-        mainIntent.putExtra("drawable_id", winner);
-        mainIntent.putExtra("isDraw", isDraw);
-        startActivity(mainIntent);
-        finish();
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            Intent mainIntent = new Intent(baseActivity, WinnerActivity.class);
+            mainIntent.putExtra("drawable_id", winner);
+            mainIntent.putExtra("isDraw", isDraw);
+            startActivity(mainIntent);
+            finish();
+        }, 2500);
+
     }
 
     private void playRound() {
 
-
         int leftKey, rightKey = keyList.remove(random.nextInt(keyList.size()));
+        Integer leftCard, rightCard;
         this.game_IMG_cardR.setImageResource(rightKey);
         leftKey = keyList.remove(random.nextInt(keyList.size()));
         this.game_IMG_cardL.setImageResource(leftKey);
 
-        if (cards.get(rightKey) > cards.get(leftKey))
-            game_LBL_rightScore.setText(String.valueOf(Integer.parseInt(game_LBL_rightScore.getText().toString()) + 1));
+        if ((leftCard = cards.get(leftKey)) != null && (rightCard = cards.get(rightKey)) != null) {
+            if (leftCard < rightCard)
+                game_LBL_rightScore.setText(String.valueOf(Integer.parseInt(game_LBL_rightScore.getText().toString()) + 1));
 
-        if (cards.get(leftKey) > cards.get(rightKey))
-            game_LBL_leftScore.setText(String.valueOf(Integer.parseInt(game_LBL_leftScore.getText().toString()) + 1));
-
-
+            if (leftCard > rightCard)
+                game_LBL_leftScore.setText(String.valueOf(Integer.parseInt(game_LBL_leftScore.getText().toString()) + 1));
+        } else
+            throw new NullPointerException("playRound: leftCard or right cards is null");
     }
 }

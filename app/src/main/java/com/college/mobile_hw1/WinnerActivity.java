@@ -1,18 +1,50 @@
 package com.college.mobile_hw1;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class WinnerActivity extends AppCompatActivity {
+//    @Override
+//    protected void onPause() {
+//        Log.i("info", "WinneronPause");
+//        super.onPause();
+//    }
+//
+//
+//
+//    @Override
+//    protected void onDestroy() {
+//        Log.i("info", "WinneronDestroy");
+//        super.onDestroy();
+//    }
+//
+//    @Override
+//    protected void onStart() {
+//        Log.i("info", "WinneronStart");
+//        super.onStart();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        Log.i("info", "WinneronResume");
+//        super.onResume();
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        Log.i("info", "WinneronStop");
+//        super.onStop();
+//    }
+
     ImageView winner_IMG_player;
     TextView winner_LBL_topMsg, winner_LBL_bottomMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        Log.i("info", "WinneronCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_winner);
 
