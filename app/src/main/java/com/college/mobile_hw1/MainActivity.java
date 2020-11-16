@@ -49,17 +49,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         play();
         scoreTable();
-        exit();
-
 
     }
 
     private void scoreTable() {
 //TODO - Create score table
-    }
-
-    private void exit() {
-        findViewById(R.id.main_IMG_exit).setOnClickListener((View v) -> finish());
     }
 
     public void play() {

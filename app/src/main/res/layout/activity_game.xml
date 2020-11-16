@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gary_background"
-    android:baselineAligned="false"
+    android:background="@color/gray_background"
     android:orientation="horizontal"
-    android:weightSum="1"
-    tools:context=".GameActivity">
+    tools:context=".GameActivity"
+    >
 
     <RelativeLayout
         android:layout_width="0dp"

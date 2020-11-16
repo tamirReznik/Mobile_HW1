@@ -1,6 +1,7 @@
 package com.college.mobile_hw1;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -48,23 +49,23 @@ public class WinnerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_winner);
 
-
         try {
             showGreet();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        backToMenu();
+
+        backToMenuListener();
     }
 
-    private void backToMenu() {
+    private void backToMenuListener() {
         findViewById(R.id.winner_BTN_menu).setOnClickListener((View v) -> finish());
     }
 
     private void showGreet() throws Exception {
         int drawableId = getIntent().getIntExtra("drawable_id", -1);
 
-        if (drawableId == -2)
+        if (drawableId == -1)
             throw new Exception("Invalid drawable id");
 
         this.winner_IMG_player = findViewById(R.id.winner_IMG_player);
@@ -73,7 +74,7 @@ public class WinnerActivity extends AppCompatActivity {
         this.winner_LBL_topMsg = findViewById(R.id.winner_LBL_topMsg);
         this.winner_LBL_bottomMsg = findViewById(R.id.winner_LBL_bottomMsg);
 
-        if (getIntent().getBooleanExtra("isDraw", false))
+        if (getIntent().getBooleanExtra("isDraw", true))
             this.winner_LBL_topMsg.setText(R.string.drawMsg);
         else {
             this.winner_LBL_topMsg.setText(R.string.congratsMsg);

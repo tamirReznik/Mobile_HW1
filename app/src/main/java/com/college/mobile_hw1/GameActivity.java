@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-
 public class GameActivity extends AppCompatActivity {
 
 //    @Override
@@ -65,37 +64,14 @@ public class GameActivity extends AppCompatActivity {
 //        Log.i("info", "GameonCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
         initGame();
 
-        this.game_IMG_play.setOnClickListener((View v) -> {
-            try {
-                playRound();
-            } catch (NullPointerException e) {
-                Log.e(ERROR, "onCreate: ", e);
-            }
-
-            if (keyList.isEmpty()) {
-                this.game_IMG_play.setOnClickListener(null);
-                Toast gameOver = Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT);
-                gameOver.setGravity(Gravity.TOP,0,0);
-                gameOver.show();
-
-                int leftPlayerScore = Integer.parseInt(game_LBL_leftScore.getText().toString());
-                int rightPlayerScore = Integer.parseInt(game_LBL_rightScore.getText().toString());
-
-                if (leftPlayerScore > rightPlayerScore)
-                    openWinningActivity(GameActivity.this, R.drawable.player_boy, false);
-                if (leftPlayerScore < rightPlayerScore)
-                    openWinningActivity(GameActivity.this, R.drawable.player_girl, false);
-                if (leftPlayerScore == rightPlayerScore)
-                    openWinningActivity(GameActivity.this, R.drawable.draw, true);
-            }
-        });
-
-
+        playBtnListener();
     }
 
     private void initGame() {
+
 
         //Create TypeArray with all cards vectors
         TypedArray rawCardsIds = getResources().obtainTypedArray(R.array.cards);
@@ -120,14 +96,22 @@ public class GameActivity extends AppCompatActivity {
         this.game_IMG_play = findViewById(R.id.game_IMG_play);
     }
 
-    private void openWinningActivity(Activity baseActivity, int winner, boolean isDraw) {
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            Intent mainIntent = new Intent(baseActivity, WinnerActivity.class);
-            mainIntent.putExtra("drawable_id", winner);
-            mainIntent.putExtra("isDraw", isDraw);
-            startActivity(mainIntent);
-            finish();
-        }, 2500);
+    public void playBtnListener() {
+
+        this.game_IMG_play.setOnClickListener((View v) -> playPressed());
+    }
+
+    public void playPressed() {
+
+        try {
+            playRound();
+        } catch (NullPointerException e) {
+            Log.e(ERROR, "onCreate: ", e);
+        }
+
+        if (keyList.isEmpty())
+            gameOver();
+
 
     }
 
@@ -147,5 +131,35 @@ public class GameActivity extends AppCompatActivity {
                 game_LBL_leftScore.setText(String.valueOf(Integer.parseInt(game_LBL_leftScore.getText().toString()) + 1));
         } else
             throw new NullPointerException("playRound: leftCard or right cards is null");
+    }
+
+    public void gameOver() {
+
+        this.game_IMG_play.setOnClickListener(null);
+        Toast gameOver = Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT);
+        gameOver.setGravity(Gravity.TOP, 0, 0);
+        gameOver.show();
+
+        int leftPlayerScore = Integer.parseInt(game_LBL_leftScore.getText().toString());
+        int rightPlayerScore = Integer.parseInt(game_LBL_rightScore.getText().toString());
+
+        if (leftPlayerScore > rightPlayerScore)
+            openWinningActivity(GameActivity.this, R.drawable.player_boy, false);
+        if (leftPlayerScore < rightPlayerScore)
+            openWinningActivity(GameActivity.this, R.drawable.player_girl, false);
+        if (leftPlayerScore == rightPlayerScore)
+            openWinningActivity(GameActivity.this, R.drawable.draw, true);
+    }
+
+    private void openWinningActivity(Activity baseActivity, int winner, boolean isDraw) {
+
+        Intent mainIntent = new Intent(baseActivity, WinnerActivity.class);
+        mainIntent.putExtra("drawable_id", winner);
+        mainIntent.putExtra("isDraw", isDraw);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            startActivity(mainIntent);
+            finish();
+        }, 2500);
+
     }
 }
