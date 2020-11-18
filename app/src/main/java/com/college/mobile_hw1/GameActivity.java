@@ -21,36 +21,6 @@ import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
 
-//    @Override
-//    protected void onPause() {
-//        Log.i("info", "GameonPause");
-//        super.onPause();
-//    }
-//
-//
-//    @Override
-//    protected void onDestroy() {
-//        Log.i("info", "GameonDestroy");
-//        super.onDestroy();
-//    }
-//
-//    @Override
-//    protected void onStart() {
-//        Log.i("info", "GameonStart");
-//        super.onStart();
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        Log.i("info", "GameonResume");
-//        super.onResume();
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        Log.i("info", "GameonStop");
-//        super.onStop();
-//    }
 
     public static final String ERROR = "Error";
     private HashMap<Integer, Integer> cards;
@@ -61,7 +31,6 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        Log.i("info", "GameonCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
@@ -117,12 +86,16 @@ public class GameActivity extends AppCompatActivity {
 
     private void playRound() {
 
-        int leftKey, rightKey = keyList.remove(random.nextInt(keyList.size()));
+        int leftKey, rightKey;
         Integer leftCard, rightCard;
+
+        //get and remove random key from Arraylist for each side
+        rightKey = keyList.remove(random.nextInt(keyList.size()));
         this.game_IMG_cardR.setImageResource(rightKey);
         leftKey = keyList.remove(random.nextInt(keyList.size()));
         this.game_IMG_cardL.setImageResource(leftKey);
 
+        //safety check for null from the Hashmap
         if ((leftCard = cards.get(leftKey)) != null && (rightCard = cards.get(rightKey)) != null) {
             if (leftCard < rightCard)
                 game_LBL_rightScore.setText(String.valueOf(Integer.parseInt(game_LBL_rightScore.getText().toString()) + 1));
@@ -135,7 +108,9 @@ public class GameActivity extends AppCompatActivity {
 
     public void gameOver() {
 
+        //Disable the play button when game is over
         this.game_IMG_play.setOnClickListener(null);
+        //Pop a toast massage on top of the screen - game over
         Toast gameOver = Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT);
         gameOver.setGravity(Gravity.TOP, 0, 0);
         gameOver.show();
@@ -153,9 +128,11 @@ public class GameActivity extends AppCompatActivity {
 
     private void openWinningActivity(Activity baseActivity, int winner, boolean isDraw) {
 
+        //Store valuable data for next activity
         Intent mainIntent = new Intent(baseActivity, WinnerActivity.class);
         mainIntent.putExtra("drawable_id", winner);
         mainIntent.putExtra("isDraw", isDraw);
+        //give the user 2.5 seconds to see the final card state + game over toast massage before launch next activity
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             startActivity(mainIntent);
             finish();

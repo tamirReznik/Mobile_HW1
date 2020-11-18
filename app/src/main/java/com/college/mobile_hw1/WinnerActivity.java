@@ -8,44 +8,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class WinnerActivity extends AppCompatActivity {
-//    @Override
-//    protected void onPause() {
-//        Log.i("info", "WinneronPause");
-//        super.onPause();
-//    }
-//
-//
-//
-//    @Override
-//    protected void onDestroy() {
-//        Log.i("info", "WinneronDestroy");
-//        super.onDestroy();
-//    }
-//
-//    @Override
-//    protected void onStart() {
-//        Log.i("info", "WinneronStart");
-//        super.onStart();
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        Log.i("info", "WinneronResume");
-//        super.onResume();
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        Log.i("info", "WinneronStop");
-//        super.onStop();
-//    }
+
 
     ImageView winner_IMG_player;
     TextView winner_LBL_topMsg, winner_LBL_bottomMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        Log.i("info", "WinneronCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_winner);
 
@@ -59,10 +28,12 @@ public class WinnerActivity extends AppCompatActivity {
     }
 
     private void backToMenuListener() {
+//        Finish activity when back to main activity
         findViewById(R.id.winner_BTN_menu).setOnClickListener((View v) -> finish());
     }
 
     private void showGreet() throws Exception {
+        //Extract data from previous activity - img of winner + game status (win/draw)
         int drawableId = getIntent().getIntExtra("drawable_id", -1);
 
         if (drawableId == -1)

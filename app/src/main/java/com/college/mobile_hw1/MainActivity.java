@@ -9,52 +9,16 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-//
-//    @Override
-//    protected void onPause() {
-//        Log.i("info", "MainonPause");
-//        super.onPause();
-//    }
-//
-//
-//
-//    @Override
-//    protected void onDestroy() {
-//        Log.i("info", "MainonDestroy");
-//        super.onDestroy();
-//    }
-//
-//    @Override
-//    protected void onStart() {
-//        Log.i("info", "MainonStart");
-//        super.onStart();
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        Log.i("info", "MainonResume");
-//        super.onResume();
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        Log.i("info", "MainonStop");
-//        super.onStop();
-//    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        Log.i("info", "MainonCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         play();
-        scoreTable();
 
     }
-
-    private void scoreTable() {
-//TODO - Create score table
-    }
+    //TODO - Add a score table
 
     public void play() {
         findViewById(R.id.main_BTN_play).setOnClickListener((View v) -> openPlayActivity(MainActivity.this));
