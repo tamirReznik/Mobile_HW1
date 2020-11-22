@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,9 +38,18 @@ public class GameActivity extends AppCompatActivity {
     private int[] progressSegments;
     private int progressCounter;
     private Timer gameTimer;
-    boolean isPaused;
+    private boolean isPaused;
+    private MediaPlayer flipCardSound;
 
     public GameActivity() {
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.gameTimer.cancel();
+        this.gameTimer = null;
+
     }
 
     @Override
@@ -82,7 +92,6 @@ public class GameActivity extends AppCompatActivity {
         this.random = new Random();
 
 
-
         this.game_LBL_rightScore = findViewById(R.id.game_LBL_rightScore);
         this.game_LBL_leftScore = findViewById(R.id.game_LBL_leftScore);
 
@@ -90,6 +99,8 @@ public class GameActivity extends AppCompatActivity {
         this.game_IMG_cardR = findViewById(R.id.game_IMG_cardR);
 
         this.game_IMG_play = findViewById(R.id.game_IMG_play);
+
+        this.flipCardSound = MediaPlayer.create(getApplicationContext(), R.raw.flip_card_sound);
 
         initProgressBar();
 
@@ -109,7 +120,6 @@ public class GameActivity extends AppCompatActivity {
             }
 
 
-
         });
     }
 
@@ -117,12 +127,18 @@ public class GameActivity extends AppCompatActivity {
 
         this.game_IMG_play.setImageResource(R.drawable.pause_button);
 
+        timerPlay();
+
+    }
+
+    private void timerPlay() {
         this.gameTimer = new Timer();
         this.gameTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 try {
                     runOnUiThread(() -> {
+                        flipCardSound.start();
                         playRound();
                         if (keyList.isEmpty()) {
                             gameOver();
@@ -135,9 +151,7 @@ public class GameActivity extends AppCompatActivity {
                 }
 
             }
-        }, 500, 2000);
-
-
+        }, 500, 1000);
     }
 
     private void playRound() {
@@ -150,6 +164,7 @@ public class GameActivity extends AppCompatActivity {
         this.game_IMG_cardR.setImageResource(rightKey);
         leftKey = keyList.remove(random.nextInt(keyList.size()));
         this.game_IMG_cardL.setImageResource(leftKey);
+
 
         //keyList.size() == 52 , 50 , 48 , 46 .... , 2 , 0
         //extract index ->  -- , 25 , 24 , 23 .... , 1 , 0

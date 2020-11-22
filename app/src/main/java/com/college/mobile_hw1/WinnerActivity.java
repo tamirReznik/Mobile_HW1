@@ -2,6 +2,7 @@ package com.college.mobile_hw1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,11 +13,13 @@ public class WinnerActivity extends AppCompatActivity {
 
     ImageView winner_IMG_player;
     TextView winner_LBL_topMsg, winner_LBL_bottomMsg;
+    MediaPlayer applauseSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_winner);
+
 
         try {
             showGreet();
@@ -25,6 +28,14 @@ public class WinnerActivity extends AppCompatActivity {
         }
 
         backToMenuListener();
+    }
+
+    private void play_applause(boolean isDraw) {
+        if (isDraw)
+            this.applauseSound = MediaPlayer.create(getApplicationContext(), R.raw.disappointment_sound);
+        else
+            this.applauseSound = MediaPlayer.create(getApplicationContext(), R.raw.fake_applause);
+        this.applauseSound.start();
     }
 
     private void backToMenuListener() {
@@ -45,12 +56,14 @@ public class WinnerActivity extends AppCompatActivity {
         this.winner_LBL_topMsg = findViewById(R.id.winner_LBL_topMsg);
         this.winner_LBL_bottomMsg = findViewById(R.id.winner_LBL_bottomMsg);
 
-        if (getIntent().getBooleanExtra("isDraw", true))
+        boolean isDraw = getIntent().getBooleanExtra("isDraw", true);
+        if (isDraw)
             this.winner_LBL_topMsg.setText(R.string.drawMsg);
         else {
             this.winner_LBL_topMsg.setText(R.string.congratsMsg);
             this.winner_LBL_bottomMsg.setText(R.string.winMsg);
         }
+        play_applause(isDraw);
 
 
     }
