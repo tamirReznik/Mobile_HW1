@@ -12,22 +12,35 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity {
 
 
-    public static final String ERROR = "Error";
+    private static final int DECK_SIZE = 52;
+    private static final int PROGRESS_SEGMENT_3 = 4;
+    static final String ERROR = "Error";
     private HashMap<Integer, Integer> cards;
     private ArrayList<Integer> keyList;
     private ImageView game_IMG_cardL, game_IMG_cardR, game_IMG_play;
     private TextView game_LBL_rightScore, game_LBL_leftScore;
     private Random random;
+    private ProgressBar game_PB_progressBar;
+    private int[] progressSegments;
+    private int progressCounter;
+    private Timer gameTimer;
+    boolean isPaused;
+
+    public GameActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +52,21 @@ public class GameActivity extends AppCompatActivity {
         playBtnListener();
     }
 
+    private void initProgressBar() {
+        this.game_PB_progressBar = findViewById(R.id.game_PB_progressBar);
+        this.progressCounter = 0;
+        this.game_PB_progressBar.setProgress(this.progressCounter);
+        this.progressSegments = new int[DECK_SIZE / 2];
+        for (int i = 0; i < progressSegments.length; i++)
+            if (i < PROGRESS_SEGMENT_3)
+                this.progressSegments[i] = 3;
+            else this.progressSegments[i] = 4;
+
+    }
+
     private void initGame() {
 
+        isPaused = true;
 
         //Create TypeArray with all cards vectors
         TypedArray rawCardsIds = getResources().obtainTypedArray(R.array.cards);
@@ -56,6 +82,7 @@ public class GameActivity extends AppCompatActivity {
         this.random = new Random();
 
 
+
         this.game_LBL_rightScore = findViewById(R.id.game_LBL_rightScore);
         this.game_LBL_leftScore = findViewById(R.id.game_LBL_leftScore);
 
@@ -63,23 +90,52 @@ public class GameActivity extends AppCompatActivity {
         this.game_IMG_cardR = findViewById(R.id.game_IMG_cardR);
 
         this.game_IMG_play = findViewById(R.id.game_IMG_play);
+
+        initProgressBar();
+
     }
 
     public void playBtnListener() {
 
-        this.game_IMG_play.setOnClickListener((View v) -> playPressed());
+
+        this.game_IMG_play.setOnClickListener((View v) -> {
+            this.isPaused = !isPaused;
+
+            if (!this.isPaused)
+                playPressed();
+            else {
+                this.game_IMG_play.setImageResource(R.drawable.play_button);
+                gameTimer.cancel();
+            }
+
+
+
+        });
     }
 
     public void playPressed() {
 
-        try {
-            playRound();
-        } catch (NullPointerException e) {
-            Log.e(ERROR, "onCreate: ", e);
-        }
+        this.game_IMG_play.setImageResource(R.drawable.pause_button);
 
-        if (keyList.isEmpty())
-            gameOver();
+        this.gameTimer = new Timer();
+        this.gameTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    runOnUiThread(() -> {
+                        playRound();
+                        if (keyList.isEmpty()) {
+                            gameOver();
+                            this.cancel();
+                        }
+                    });
+
+                } catch (NullPointerException e) {
+                    Log.e(ERROR, "onCreate: ", e);
+                }
+
+            }
+        }, 500, 2000);
 
 
     }
@@ -94,6 +150,12 @@ public class GameActivity extends AppCompatActivity {
         this.game_IMG_cardR.setImageResource(rightKey);
         leftKey = keyList.remove(random.nextInt(keyList.size()));
         this.game_IMG_cardL.setImageResource(leftKey);
+
+        //keyList.size() == 52 , 50 , 48 , 46 .... , 2 , 0
+        //extract index ->  -- , 25 , 24 , 23 .... , 1 , 0
+        this.progressCounter += progressSegments[keyList.size() / 2];
+        this.game_PB_progressBar.setProgress(this.progressCounter);
+
 
         //safety check for null from the Hashmap
         if ((leftCard = cards.get(leftKey)) != null && (rightCard = cards.get(rightKey)) != null) {
