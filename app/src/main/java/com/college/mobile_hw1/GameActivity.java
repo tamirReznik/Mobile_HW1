@@ -37,18 +37,45 @@ public class GameActivity extends AppCompatActivity {
     private ProgressBar game_PB_progressBar;
     private int[] progressSegments;
     private int progressCounter;
-    private Timer gameTimer;
+    private Timer gameTimer = null;
     private boolean isPaused;
     private MediaPlayer flipCardSound;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("TAG", "gameActivity onResume: ");
+        playBtnListener();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("TAG", "gameActivity onDestroy: ");
+    }
+
 
     public GameActivity() {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("TAG", "gameActivity onStop: ");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("TAG", "gameActivity onStart: ");
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-        this.gameTimer.cancel();
-        this.gameTimer = null;
+        Log.i("TAG", "gameActivity onPause: ");
+        if (this.gameTimer != null)
+            this.gameTimer.cancel();
 
     }
 
@@ -56,10 +83,10 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
+        Log.i("TAG", "gameActivity onCreate: ");
         initGame();
 
-        playBtnListener();
+
     }
 
     private void initProgressBar() {
