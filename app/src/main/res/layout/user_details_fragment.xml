@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_dialog_FRAGMENT"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:background="@color/gray_background"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/mainDialog_LBL_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:ellipsize="none"
+        android:scrollHorizontally="false"
+        android:text="@string/str_choose_avatar"
+        android:textSize="38sp" />
+
+    <LinearLayout
+        android:id="@+id/mainDialog_IMG_layouts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/mainDialog_LBL_head"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/mainDialog_IMG_boy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="25dp"
+            android:layout_weight=".5"
+            android:background="@color/gray_background"
+            android:contentDescription="@string/description"
+            android:src="@drawable/player_boy" />
+
+        <ImageView
+            android:id="@+id/mainDialog_IMG_girl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_weight=".5"
+            android:background="@color/gray_background"
+            android:contentDescription="@string/description"
+            android:src="@drawable/player_girl" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/mainDialog_TXT_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainDialog_IMG_layouts"
+        android:layout_centerHorizontal="true"
+        android:autofillHints=""
+        android:hint="@string/str_enter_your_name"
+        android:inputType="text"
+        android:padding="15dp"
+        android:textSize="26sp" />
+
+    <Button
+        android:id="@+id/mainDialog_BTN_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainDialog_TXT_name"
+        android:layout_centerHorizontal="true"
+        android:text="@string/str_submit"
+        android:textSize="20sp" />
+
+
+</RelativeLayout>

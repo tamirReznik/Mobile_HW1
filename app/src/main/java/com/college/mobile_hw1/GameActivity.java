@@ -1,5 +1,6 @@
 package com.college.mobile_hw1;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -38,36 +39,31 @@ public class GameActivity extends AppCompatActivity {
     private int[] progressSegments;
     private int progressCounter;
     private Timer gameTimer = null;
-    private boolean isPaused;
+    private boolean isGamePause;
     private MediaPlayer flipCardSound;
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i("TAG", "gameActivity onResume: ");
-        playBtnListener();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("TAG", "gameActivity onDestroy: ");
-    }
-
-
-    public GameActivity() {
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i("TAG", "gameActivity onStop: ");
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_game);
+        Log.i("TAG", "gameActivity onCreate: ");
+        initGame();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.i("TAG", "gameActivity onStart: ");
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Utils.fullScreen(getWindow());
+        Log.i("TAG", "gameActivity onResume: ");
+        playBtnListener();
+
     }
 
     @Override
@@ -80,13 +76,26 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
-        Log.i("TAG", "gameActivity onCreate: ");
-        initGame();
+    protected void onStop() {
+        super.onStop();
+        Log.i("TAG", "gameActivity onStop: ");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("TAG", "gameActivity onDestroy: ");
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus)
+            Utils.fullScreen(getWindow());
+    }
 
 
+    public GameActivity() {
     }
 
     private void initProgressBar() {
@@ -103,9 +112,23 @@ public class GameActivity extends AppCompatActivity {
 
     private void initGame() {
 
-        isPaused = true;
+        isGamePause = true;
 
-        //Create TypeArray with all cards vectors
+        initCardArray();
+
+        findViews();
+
+        initSound();
+
+        initProgressBar();
+
+    }
+
+    private void initSound() {
+        this.flipCardSound = MediaPlayer.create(getApplicationContext(), R.raw.flip_card_sound);
+    }
+
+    private void initCardArray() { //Create TypeArray with all cards vectors
         TypedArray rawCardsIds = getResources().obtainTypedArray(R.array.cards);
 
         //Store all vectors in hashMap with id as key and number of card as value
@@ -117,8 +140,9 @@ public class GameActivity extends AppCompatActivity {
         //use Arraylist with all keys to use random key each round
         this.keyList = new ArrayList<>(cards.keySet());
         this.random = new Random();
+    }
 
-
+    private void findViews() {
         this.game_LBL_rightScore = findViewById(R.id.game_LBL_rightScore);
         this.game_LBL_leftScore = findViewById(R.id.game_LBL_leftScore);
 
@@ -126,20 +150,15 @@ public class GameActivity extends AppCompatActivity {
         this.game_IMG_cardR = findViewById(R.id.game_IMG_cardR);
 
         this.game_IMG_play = findViewById(R.id.game_IMG_play);
-
-        this.flipCardSound = MediaPlayer.create(getApplicationContext(), R.raw.flip_card_sound);
-
-        initProgressBar();
-
     }
 
     public void playBtnListener() {
 
 
         this.game_IMG_play.setOnClickListener((View v) -> {
-            this.isPaused = !isPaused;
+            this.isGamePause = !isGamePause;
 
-            if (!this.isPaused)
+            if (!this.isGamePause)
                 playPressed();
             else {
                 this.game_IMG_play.setImageResource(R.drawable.play_button);
@@ -150,6 +169,32 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("isGamePause", isGamePause);
+        outState.putIntegerArrayList("keyList", keyList);
+        outState.putInt("progressCounter", progressCounter);
+        outState.putString("leftScore", game_LBL_leftScore.getText().toString());
+        outState.putString("rightScore", game_LBL_rightScore.getText().toString());
+
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        this.keyList = savedInstanceState.getIntegerArrayList("keyList");
+        this.isGamePause = savedInstanceState.getBoolean("isGamePause");
+        this.progressCounter = savedInstanceState.getInt("progressCounter");
+        game_LBL_leftScore.setText(savedInstanceState.getString("leftScore"));
+        game_LBL_rightScore.setText(savedInstanceState.getString("rightScore"));
+        if (!isGamePause)
+            playPressed();
+
+
+    }
+
     public void playPressed() {
 
         this.game_IMG_play.setImageResource(R.drawable.pause_button);
@@ -157,6 +202,7 @@ public class GameActivity extends AppCompatActivity {
         timerPlay();
 
     }
+
 
     private void timerPlay() {
         this.gameTimer = new Timer();
@@ -243,4 +289,6 @@ public class GameActivity extends AppCompatActivity {
         }, 2500);
 
     }
+
+
 }

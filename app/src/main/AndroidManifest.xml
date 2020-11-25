@@ -13,11 +13,12 @@
         <activity android:name=".WinnerActivity" />
         <activity
             android:name=".GameActivity"
-            android:screenOrientation="landscape" />
-        <activity android:name=".MainActivity">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

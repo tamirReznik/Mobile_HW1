@@ -12,28 +12,40 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DetailsDialog.DialogInputListener {
 
     private static MediaPlayer mainScreenSound = null;
     private ImageView main_IMG_volume;
     private boolean isMute;
+    private DetailsDialog detailsDialog;
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("TAG", "MainActivity onDestroy: ");
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.i("TAG", "MainActivity onCreate: ");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i("TAG", "MainActivity onStop: ");
+
+        initSound();
+        imgSoundListener();
+
+        play();
+
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.i("TAG", "MainActivity onStart: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("TAG", "MainActivity onResume: " + mainScreenSound.isPlaying());
+        playSound();
+        Utils.fullScreen(getWindow());
     }
 
     @Override
@@ -44,46 +56,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void pauseSound() {
-        mainScreenSound.pause();
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("TAG", "MainActivity onStop: ");
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i("TAG", "MainActivity onResume: " + mainScreenSound.isPlaying());
-        playSound();
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("TAG", "MainActivity onDestroy: ");
     }
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.i("TAG", "MainActivity onCreate: ");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initSound();
-        imgSoundListener();
-        play();
-
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        Log.i("TAGmain", "onWindowFocusChanged: mainActivity");
+        if (hasFocus)
+            Utils.fullScreen(getWindow());
     }
 
-    public void initSound() {
-        mainScreenSound = MediaPlayer.create(getApplicationContext(), R.raw.elevator_music);
-        mainScreenSound.setLooping(true);
-        mainScreenSound.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-        this.main_IMG_volume = findViewById(R.id.main_IMG_volume);
-        this.isMute = false;
-    }
-
-    private void playSound() {
-        mainScreenSound.start();
-    }
     //TODO - Add a score table
-
-    public void play() {
-        findViewById(R.id.main_BTN_play).setOnClickListener((View v) -> openPlayActivity(MainActivity.this));
-    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -102,17 +96,34 @@ public class MainActivity extends AppCompatActivity {
 
         if (!mainScreenSound.isPlaying())
             mainScreenSound.start();
+
+
     }
 
-    private void updateVolume() {
+    @Override
+    public void detailsInput(CharSequence name, int avatar) {
+        String playerName = name.toString();
+        int playerAvatar = avatar;
+        openPlayActivity(MainActivity.this);
+    }
 
-        if (this.isMute) {
-            this.main_IMG_volume.setImageResource(R.drawable.mute);
-            mainScreenSound.setVolume(0, 0);
-        } else {
-            this.main_IMG_volume.setImageResource(R.drawable.volume_on);
-            mainScreenSound.setVolume(1, 1);
-        }
+    public void initSound() {
+        mainScreenSound = MediaPlayer.create(getApplicationContext(), R.raw.elevator_music);
+        mainScreenSound.setLooping(true);
+        mainScreenSound.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+        this.main_IMG_volume = findViewById(R.id.main_IMG_volume);
+        this.isMute = false;
+    }
+
+    public void play() {
+        findViewById(R.id.main_BTN_play).setOnClickListener((View v) -> {
+            DetailsDialog detailsDialog = new DetailsDialog();
+            detailsDialog.show(getSupportFragmentManager(), "user details");
+
+
+//            openPlayActivity(MainActivity.this);
+        });
     }
 
     private void imgSoundListener() {
@@ -126,5 +137,24 @@ public class MainActivity extends AppCompatActivity {
     public void openPlayActivity(Activity baseActivity) {
         Intent mainIntent = new Intent(baseActivity, GameActivity.class);
         startActivity(mainIntent);
+    }
+
+    private void playSound() {
+        mainScreenSound.start();
+    }
+
+    public void pauseSound() {
+        mainScreenSound.pause();
+    }
+
+    private void updateVolume() {
+
+        if (this.isMute) {
+            this.main_IMG_volume.setImageResource(R.drawable.mute);
+            mainScreenSound.setVolume(0, 0);
+        } else {
+            this.main_IMG_volume.setImageResource(R.drawable.volume_on);
+            mainScreenSound.setVolume(1, 1);
+        }
     }
 }

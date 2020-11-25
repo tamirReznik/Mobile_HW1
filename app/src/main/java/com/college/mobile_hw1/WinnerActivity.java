@@ -37,10 +37,11 @@ public class WinnerActivity extends AppCompatActivity {
         Log.i("TAG", "WinnerActivity onResume: ");
         if (this.soundPosition == -1)
             this.applauseSound.start();
-        else if (this.soundPosition < this.applauseSound.getDuration()){
+        else if (this.soundPosition < this.applauseSound.getDuration()) {
             this.applauseSound.start();
             this.applauseSound.seekTo(this.soundPosition);
         }
+        Utils.fullScreen(getWindow());
     }
 
     @Override
@@ -127,4 +128,10 @@ public class WinnerActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus)
+//            Utils.fullScreen(getWindow());
+    }
 }

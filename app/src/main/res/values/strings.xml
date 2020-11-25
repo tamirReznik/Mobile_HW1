@@ -11,4 +11,7 @@
     <string name="drawMsg">It\'s a draw</string>
     <string name="congratsMsg">Congrats!!!</string>
     <string name="winMsg">You Won</string>
+    <string name="str_choose_avatar">Choose Avatar</string>
+    <string name="str_enter_your_name">Enter Your Name</string>
+    <string name="str_submit">Submit</string>
 </resources>
