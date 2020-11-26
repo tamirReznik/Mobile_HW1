@@ -70,8 +70,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.i("TAG", "gameActivity onPause: ");
-        if (this.gameTimer != null)
-            this.gameTimer.cancel();
+        if (gameTimer != null)
+            gameTimer.cancel();
 
     }
 
@@ -99,14 +99,14 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void initProgressBar() {
-        this.game_PB_progressBar = findViewById(R.id.game_PB_progressBar);
-        this.progressCounter = 0;
-        this.game_PB_progressBar.setProgress(this.progressCounter);
-        this.progressSegments = new int[DECK_SIZE / 2];
+        game_PB_progressBar = findViewById(R.id.game_PB_progressBar);
+        progressCounter = 0;
+        game_PB_progressBar.setProgress(progressCounter);
+        progressSegments = new int[DECK_SIZE / 2];
         for (int i = 0; i < progressSegments.length; i++)
             if (i < PROGRESS_SEGMENT_3)
-                this.progressSegments[i] = 3;
-            else this.progressSegments[i] = 4;
+                progressSegments[i] = 3;
+            else progressSegments[i] = 4;
 
     }
 
@@ -125,43 +125,43 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void initSound() {
-        this.flipCardSound = MediaPlayer.create(getApplicationContext(), R.raw.flip_card_sound);
+        flipCardSound = MediaPlayer.create(getApplicationContext(), R.raw.flip_card_sound);
     }
 
     private void initCardArray() { //Create TypeArray with all cards vectors
         TypedArray rawCardsIds = getResources().obtainTypedArray(R.array.cards);
 
         //Store all vectors in hashMap with id as key and number of card as value
-        this.cards = new HashMap<>();
+       cards = new HashMap<>();
         for (int i = 0; i < rawCardsIds.length(); i++)
             cards.put(rawCardsIds.getResourceId(i, 0), (i % 13) + 1);
         rawCardsIds.recycle();
 
         //use Arraylist with all keys to use random key each round
-        this.keyList = new ArrayList<>(cards.keySet());
-        this.random = new Random();
+        keyList = new ArrayList<>(cards.keySet());
+        random = new Random();
     }
 
     private void findViews() {
-        this.game_LBL_rightScore = findViewById(R.id.game_LBL_rightScore);
-        this.game_LBL_leftScore = findViewById(R.id.game_LBL_leftScore);
+        game_LBL_rightScore = findViewById(R.id.game_LBL_rightScore);
+        game_LBL_leftScore = findViewById(R.id.game_LBL_leftScore);
 
-        this.game_IMG_cardL = findViewById(R.id.game_IMG_cardL);
-        this.game_IMG_cardR = findViewById(R.id.game_IMG_cardR);
+        game_IMG_cardL = findViewById(R.id.game_IMG_cardL);
+        game_IMG_cardR = findViewById(R.id.game_IMG_cardR);
 
-        this.game_IMG_play = findViewById(R.id.game_IMG_play);
+        game_IMG_play = findViewById(R.id.game_IMG_play);
     }
 
     public void playBtnListener() {
 
 
-        this.game_IMG_play.setOnClickListener((View v) -> {
-            this.isGamePause = !isGamePause;
+        game_IMG_play.setOnClickListener((View v) -> {
+            isGamePause = !isGamePause;
 
-            if (!this.isGamePause)
+            if (!isGamePause)
                 playPressed();
             else {
-                this.game_IMG_play.setImageResource(R.drawable.play_button);
+                game_IMG_play.setImageResource(R.drawable.play_button);
                 gameTimer.cancel();
             }
 
@@ -184,9 +184,9 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        this.keyList = savedInstanceState.getIntegerArrayList("keyList");
-        this.isGamePause = savedInstanceState.getBoolean("isGamePause");
-        this.progressCounter = savedInstanceState.getInt("progressCounter");
+        keyList = savedInstanceState.getIntegerArrayList("keyList");
+        isGamePause = savedInstanceState.getBoolean("isGamePause");
+        progressCounter = savedInstanceState.getInt("progressCounter");
         game_LBL_leftScore.setText(savedInstanceState.getString("leftScore"));
         game_LBL_rightScore.setText(savedInstanceState.getString("rightScore"));
         if (!isGamePause)
@@ -197,7 +197,7 @@ public class GameActivity extends AppCompatActivity {
 
     public void playPressed() {
 
-        this.game_IMG_play.setImageResource(R.drawable.pause_button);
+        game_IMG_play.setImageResource(R.drawable.pause_button);
 
         timerPlay();
 
@@ -205,8 +205,8 @@ public class GameActivity extends AppCompatActivity {
 
 
     private void timerPlay() {
-        this.gameTimer = new Timer();
-        this.gameTimer.scheduleAtFixedRate(new TimerTask() {
+        gameTimer = new Timer();
+        gameTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 try {
@@ -234,15 +234,15 @@ public class GameActivity extends AppCompatActivity {
 
         //get and remove random key from Arraylist for each side
         rightKey = keyList.remove(random.nextInt(keyList.size()));
-        this.game_IMG_cardR.setImageResource(rightKey);
+        game_IMG_cardR.setImageResource(rightKey);
         leftKey = keyList.remove(random.nextInt(keyList.size()));
-        this.game_IMG_cardL.setImageResource(leftKey);
+        game_IMG_cardL.setImageResource(leftKey);
 
 
         //keyList.size() == 52 , 50 , 48 , 46 .... , 2 , 0
         //extract index ->  -- , 25 , 24 , 23 .... , 1 , 0
-        this.progressCounter += progressSegments[keyList.size() / 2];
-        this.game_PB_progressBar.setProgress(this.progressCounter);
+        progressCounter += progressSegments[keyList.size() / 2];
+        game_PB_progressBar.setProgress(progressCounter);
 
 
         //safety check for null from the Hashmap
@@ -259,7 +259,7 @@ public class GameActivity extends AppCompatActivity {
     public void gameOver() {
 
         //Disable the play button when game is over
-        this.game_IMG_play.setOnClickListener(null);
+        game_IMG_play.setOnClickListener(null);
         //Pop a toast massage on top of the screen - game over
         Toast gameOver = Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT);
         gameOver.setGravity(Gravity.TOP, 0, 0);

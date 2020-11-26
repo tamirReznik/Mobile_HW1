@@ -20,8 +20,8 @@ public class WinnerActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.i("TAG", "WinnerActivity onPause: ");
-        this.applauseSound.pause();
-        this.soundPosition = this.applauseSound.getCurrentPosition();
+        applauseSound.pause();
+        soundPosition = applauseSound.getCurrentPosition();
 
     }
 
@@ -35,11 +35,11 @@ public class WinnerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i("TAG", "WinnerActivity onResume: ");
-        if (this.soundPosition == -1)
-            this.applauseSound.start();
-        else if (this.soundPosition < this.applauseSound.getDuration()) {
-            this.applauseSound.start();
-            this.applauseSound.seekTo(this.soundPosition);
+        if (soundPosition == -1)
+            applauseSound.start();
+        else if (soundPosition < applauseSound.getDuration()) {
+            applauseSound.start();
+            applauseSound.seekTo(soundPosition);
         }
         Utils.fullScreen(getWindow());
     }
@@ -55,8 +55,8 @@ public class WinnerActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.i("TAG", "WinnerActivity onDestroy: ");
         super.onDestroy();
-        this.applauseSound.stop();
-        this.applauseSound.release();
+        applauseSound.stop();
+        applauseSound.release();
     }
 
     @Override
@@ -76,11 +76,11 @@ public class WinnerActivity extends AppCompatActivity {
     }
 
     private void initApplauseSound(boolean isDraw) {
-        this.soundPosition = -1;
+        soundPosition = -1;
         if (isDraw)
-            this.applauseSound = MediaPlayer.create(getApplicationContext(), R.raw.disappointment_sound);
+            applauseSound = MediaPlayer.create(getApplicationContext(), R.raw.disappointment_sound);
         else
-            this.applauseSound = MediaPlayer.create(getApplicationContext(), R.raw.fake_applause);
+            applauseSound = MediaPlayer.create(getApplicationContext(), R.raw.fake_applause);
 
     }
 
@@ -124,7 +124,7 @@ public class WinnerActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        this.soundPosition = savedInstanceState.getInt("media_position");
+        soundPosition = savedInstanceState.getInt("media_position");
 
     }
 

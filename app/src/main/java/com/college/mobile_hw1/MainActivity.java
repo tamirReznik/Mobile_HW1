@@ -12,12 +12,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
 public class MainActivity extends AppCompatActivity implements DetailsDialog.DialogInputListener {
 
     private static MediaPlayer mainScreenSound = null;
     private ImageView main_IMG_volume;
     private boolean isMute;
     private DetailsDialog detailsDialog;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +29,11 @@ public class MainActivity extends AppCompatActivity implements DetailsDialog.Dia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         initSound();
+
         imgSoundListener();
 
         play();
-
 
     }
 
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements DetailsDialog.Dia
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        Log.i("TAGmain", "onWindowFocusChanged: mainActivity");
+        Log.i("TAG", "onWindowFocusChanged: mainActivity");
         if (hasFocus)
             Utils.fullScreen(getWindow());
     }
@@ -91,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements DetailsDialog.Dia
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mainScreenSound.seekTo(savedInstanceState.getInt("media_position"));
-        this.isMute = savedInstanceState.getBoolean("volume_on");
+        isMute = savedInstanceState.getBoolean("volume_on");
         updateVolume();
 
         if (!mainScreenSound.isPlaying())
@@ -104,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements DetailsDialog.Dia
     public void detailsInput(CharSequence name, int avatar) {
         String playerName = name.toString();
         int playerAvatar = avatar;
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
         openPlayActivity(MainActivity.this);
     }
 
@@ -112,8 +116,8 @@ public class MainActivity extends AppCompatActivity implements DetailsDialog.Dia
         mainScreenSound.setLooping(true);
         mainScreenSound.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        this.main_IMG_volume = findViewById(R.id.main_IMG_volume);
-        this.isMute = false;
+        main_IMG_volume = findViewById(R.id.main_IMG_volume);
+        isMute = false;
     }
 
     public void play() {
@@ -121,14 +125,12 @@ public class MainActivity extends AppCompatActivity implements DetailsDialog.Dia
             DetailsDialog detailsDialog = new DetailsDialog();
             detailsDialog.show(getSupportFragmentManager(), "user details");
 
-
-//            openPlayActivity(MainActivity.this);
         });
     }
 
     private void imgSoundListener() {
-        this.main_IMG_volume.setOnClickListener(v -> {
-            this.isMute = !this.isMute;
+        main_IMG_volume.setOnClickListener(v -> {
+            isMute = !isMute;
             updateVolume();
 
         });
@@ -149,11 +151,11 @@ public class MainActivity extends AppCompatActivity implements DetailsDialog.Dia
 
     private void updateVolume() {
 
-        if (this.isMute) {
-            this.main_IMG_volume.setImageResource(R.drawable.mute);
+        if (isMute) {
+            main_IMG_volume.setImageResource(R.drawable.mute);
             mainScreenSound.setVolume(0, 0);
         } else {
-            this.main_IMG_volume.setImageResource(R.drawable.volume_on);
+            main_IMG_volume.setImageResource(R.drawable.volume_on);
             mainScreenSound.setVolume(1, 1);
         }
     }
