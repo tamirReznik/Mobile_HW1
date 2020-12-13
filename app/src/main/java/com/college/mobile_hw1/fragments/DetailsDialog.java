@@ -1,4 +1,4 @@
-package com.college.mobile_hw1;
+package com.college.mobile_hw1.fragments;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -15,16 +15,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.Objects;
+import com.college.mobile_hw1.R;
+import com.college.mobile_hw1.interfaces.callbackes.DialogInputListener;
 
+import java.util.Objects;
 
 public class DetailsDialog extends DialogFragment {
 
-
-    public interface DialogInputListener {
-        void detailsInput(CharSequence name, int avatar);
-
-    }
 
     private View dialogView;
     private DialogInputListener listener;
@@ -32,7 +29,7 @@ public class DetailsDialog extends DialogFragment {
     private ImageView mainDialog_IMG_boy, mainDialog_IMG_girl;
     private Button mainDialog_BTN_submit;
     private String name;
-    private int avatar;
+    private String avatar;
 
 
     @Override
@@ -70,7 +67,7 @@ public class DetailsDialog extends DialogFragment {
         mainDialog_BTN_submit.setOnClickListener((View v) -> {
             if (!mainDialog_TXT_name.getText().toString().equals("")) {
                 name = mainDialog_TXT_name.getText().toString();
-                if (avatar == -1)
+                if (avatar == null)
                     Toast.makeText(getActivity(), "Select Avatar", Toast.LENGTH_SHORT).show();
                 else {
                     listener.detailsInput(name, avatar);
@@ -89,13 +86,14 @@ public class DetailsDialog extends DialogFragment {
         mainDialog_IMG_boy.setOnClickListener((View v) -> {
             mainDialog_IMG_boy.setBackgroundColor(Color.BLUE);
             mainDialog_IMG_girl.setBackgroundColor(Color.DKGRAY);
-            avatar = 1;
+            avatar = getResources().getResourceEntryName(R.drawable.player_boy);
+
         });
 
         mainDialog_IMG_girl.setOnClickListener((View v) -> {
             mainDialog_IMG_boy.setBackgroundColor(Color.DKGRAY);
             mainDialog_IMG_girl.setBackgroundColor(Color.BLUE);
-            avatar = 0;
+            avatar = getResources().getResourceEntryName(R.drawable.player_girl);
         });
 
     }
@@ -105,6 +103,6 @@ public class DetailsDialog extends DialogFragment {
         mainDialog_BTN_submit = dialogView.findViewById(R.id.mainDialog_BTN_submit);
         mainDialog_IMG_boy = dialogView.findViewById(R.id.mainDialog_IMG_boy);
         mainDialog_IMG_girl = dialogView.findViewById(R.id.mainDialog_IMG_girl);
-        avatar = -1;
+        avatar = null;
     }
 }

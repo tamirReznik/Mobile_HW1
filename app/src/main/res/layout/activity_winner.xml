@@ -6,7 +6,7 @@
     android:background="@color/gray_background"
     android:keepScreenOn="true"
     android:orientation="vertical"
-    tools:context=".WinnerActivity">
+    tools:context=".activities.WinnerActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

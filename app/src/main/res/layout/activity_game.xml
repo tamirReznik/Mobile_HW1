@@ -6,7 +6,8 @@
     android:background="@color/gray_background"
     android:keepScreenOn="true"
     android:orientation="horizontal"
-    tools:context=".GameActivity">
+    tools:context=".activities.GameActivity"
+    android:baselineAligned="false">
 
     <RelativeLayout
         android:layout_width="0dp"
