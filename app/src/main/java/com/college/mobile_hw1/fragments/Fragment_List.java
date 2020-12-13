@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.college.mobile_hw1.interfaces.callbackes.AddMarkerToMapCallback;
 import com.college.mobile_hw1.utils.KEYS;
 import com.college.mobile_hw1.R;
 import com.college.mobile_hw1.general.Player;
@@ -34,6 +35,9 @@ import java.util.Stack;
 public class Fragment_List extends Fragment {
 
     private RefreshMapCallback refreshMapCallback;
+
+
+    private AddMarkerToMapCallback addMarkerToMapCallback;
     private int validRows;
     private Stack<Player> players;
 
@@ -99,14 +103,17 @@ public class Fragment_List extends Fragment {
 
             String avatar = (String) playerFromDb.get(KEYS.AVATAR);
             String name = (String) playerFromDb.get(KEYS.NAME);
-            Double lat = (Double) Objects.requireNonNull(playerFromDb.get(KEYS.LAT));
-            Double lon = (Double) Objects.requireNonNull(playerFromDb.get(KEYS.LON));
+            double lat = (Double) Objects.requireNonNull(playerFromDb.get(KEYS.LAT));
+            double lon = (Double) Objects.requireNonNull(playerFromDb.get(KEYS.LON));
 
             if (name == null || avatar == null)
                 throw new RuntimeException("player can't have null properties");
 
+            if (lat != KEYS.DEFAULT_LAT_LON_VAL && lon != KEYS.DEFAULT_LAT_LON_VAL)
+                addMarkerToMapCallback.addMarker(lat, lon);
 
             players.push(new Player(name, lat, lon, avatar, score));
+
             Log.i("playerDet", "fetchTopTenListFromDb: " + players.peek().toString());
         }
 
@@ -141,8 +148,11 @@ public class Fragment_List extends Fragment {
             rows.get(i - 1).setOnClickListener(v -> {
                 if (refreshMapCallback != null) {
                     String rank = ((TextView) ((TableRow) v).getChildAt(0)).getText().toString();
-                    refreshMapCallback.refreshMap(players.elementAt(validRows - Integer.parseInt(rank)));
-
+                    Player temp = players.elementAt(validRows - Integer.parseInt(rank));
+                    double latitude = temp.getLat();
+                    double longitude = temp.getLon();
+                    if (latitude != KEYS.DEFAULT_LAT_LON_VAL && longitude != KEYS.DEFAULT_LAT_LON_VAL)
+                        refreshMapCallback.refreshMap(temp.getLat(), temp.getLon());
                 }
             });
 
@@ -152,4 +162,9 @@ public class Fragment_List extends Fragment {
     public void setRefreshMapCallback(RefreshMapCallback refreshMapCallback) {
         this.refreshMapCallback = refreshMapCallback;
     }
+
+    public void setAddMarkerToMapCallback(AddMarkerToMapCallback addMarkerToMapCallback) {
+        this.addMarkerToMapCallback = addMarkerToMapCallback;
+    }
+
 }

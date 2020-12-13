@@ -5,11 +5,9 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.college.mobile_hw1.R;
-import com.college.mobile_hw1.general.Player;
-import com.college.mobile_hw1.interfaces.callbackes.RefreshMapCallback;
-import com.college.mobile_hw1.utils.Utils;
 import com.college.mobile_hw1.fragments.Fragment_List;
 import com.college.mobile_hw1.fragments.Fragment_Map;
+import com.college.mobile_hw1.utils.Utils;
 
 public class ScoreActivity extends AppCompatActivity {
 
@@ -30,8 +28,9 @@ public class ScoreActivity extends AppCompatActivity {
         Fragment_Map fragment_map = new Fragment_Map();
         getSupportFragmentManager().beginTransaction().replace(R.id.score_LAY_map, fragment_map).commit();
 
+        fragment_list.setRefreshMapCallback(fragment_map::showMarker);
 
-        fragment_list.setRefreshMapCallback(player -> fragment_map.showMarker(player.getLat(), player.getLon()));
+        fragment_list.setAddMarkerToMapCallback(fragment_map::addMarker);
 
     }
 

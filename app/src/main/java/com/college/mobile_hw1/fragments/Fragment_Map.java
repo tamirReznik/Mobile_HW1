@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.college.mobile_hw1.R;
-import com.college.mobile_hw1.utils.KEYS;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,29 +44,32 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
     }
 
+    public void addMarker(double lat, double lon) {
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        LatLng latLng = new LatLng(lat, lon);
+
+        markerOptions.position(latLng);
+        markerOptions.title(latLng.latitude + " : " + latLng.longitude);
+        googleMap.addMarker(markerOptions);
+
+    }
+
     public void showMarker(double lat, double lon) {
         if (googleMap == null)
             return;
         // if location doesn't exist - no zoom-in in map
-        if (lat != KEYS.DEFAULT_LAT_LON_VAL && lon != KEYS.DEFAULT_LAT_LON_VAL) {
-            MarkerOptions markerOptions = new MarkerOptions();
-            LatLng latLng = new LatLng(lat, lon);
+        LatLng latLng = new LatLng(lat, lon);
 
-            markerOptions.position(latLng);
-            markerOptions.title(latLng.latitude + " : " + latLng.longitude);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
 
-            googleMap.clear();
-
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
-
-            googleMap.addMarker(markerOptions);
-        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        this.googleMap.clear();
 
     }
 }
